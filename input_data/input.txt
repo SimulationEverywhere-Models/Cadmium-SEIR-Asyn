@@ -1,0 +1,46 @@
+;
+; Empty lines, and lines that start with ; are ignored
+;
+;       key                 value
+;       |-----------|       |----------|
+;       v           v       v          v
+; ^[\s]*([^=;\n\r]+?)\s*=\s*([^;\n\r]+?)\s*(([;\n\r].*)|$)
+;
+;
+
+c  = 14.781    ;     Contact rate
+b  = 2.1011e-8 ;     Probability of transmission per contact
+q  = 1.8887e-7 ;     Quarantined rate of exposed individuals
+e  = 0.142857  ;1/7  Transition rate of exposed individuals to the infected class
+l  = 0.071428  ;1/14 Rate at which the quarantined uninfected contacts were released into the wider community
+n  = 0.86834   ;     Probability of having symptoms among infected individuals
+di = 0.13266   ;     Transition rate of symptomatic infected individuals to the uarantined infected class
+dq = 0.1259    ;     Transition rate of quarantined exposed individuals to the quarantined infected class
+yi = 0.33029   ;     Recovery rate of symptomatic infected individuals
+ya = 0.13978   ;     Recovery rate of asymptomatic infected individuals
+yh = 0.11624   ;     Recovery rate of quarantined infected individuals
+a  = 1.7826e-5 ;     Disease-induced death rate
+
+S  = 11081000  ;     Initial susceptible population
+E  = 105.1     ;     Initial exposed population
+I  = 27.679    ;     Initial symptomatic infected population
+A  = 53.839    ;     Initial asymptomatic infected population
+Sq = 739       ;     Initial quarantined susceptible population
+Eq = 1.1642    ;     Initial quarantined exposed population
+H  = 1         ;     Initial quarantined infected population
+R  = 2         ;     Initial recovered population
+D  = 0         ;     Initial deceased population
+
+; The equations
+; S'  = -((c*b) + (c*q*(1-b))) *  S * (I + A) + (l * Sq)
+; E'  = (b*c*(1-q)*S*(I+A))-(e*E)
+; I'  = (e*n*E)-((di+a+yi)*I)
+; A'  = (e*(1-n)*E)-(ya*A)
+; Sq' = ((1-b)*c*q*S*(I+A))-(l*Sq)
+; Eq' = (b*c*q*S*(I+A))-(dq*Eq)
+; H'  = (di*I)+(dq*Eq)-((a+yh)*H)
+; R'  = ((yi*I)+(ya*A)+(yh*H))
+; D'  = ((a*I)+(a*H))
+
+
+
