@@ -1,4 +1,10 @@
 bin/
 build/
 csv/
+csv.old/
+figures/
+figures.old/
+gifs/
 simulation_results/
+
+input_data/auto_input.txt

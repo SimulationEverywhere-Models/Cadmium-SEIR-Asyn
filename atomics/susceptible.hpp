@@ -69,13 +69,13 @@ using namespace std;
                 double population;
                 double population_delta;
 
-                //double susceptible;
-                //double exposed;
-                double symptomatic_infective;
-                double asymptomatic_infective;
-                double quarantined_susceptible;
-                //double quarantined_exposed;
-                //double quarantined_infective;
+                //double S;
+                //double E;
+                double I;
+                double A;
+                double Sq;
+                //double Eq;
+                //double H;
 
                 bool report_queued;
             };
@@ -96,24 +96,29 @@ using namespace std;
 
             // internal transition
             void internal_transition() {
-                state.population += state.population_delta;
+                state.population = max(0.0, state.population+state.population_delta);
                 state.population_delta = 0;
                 state.report_queued = false;
             }
 
             // external transition
-            void external_transition(TIME e, typename make_message_bags<input_ports>::type mbs) {
-                //for(auto el : get_messages<typename population_group_defs::susceptible>            (mbs)){state.susceptible             = el;}
-                //for(auto el : get_messages<typename population_group_defs::exposed>                (mbs)){state.exposed                 = el;}
-                for(auto el : get_messages<typename population_group_defs::symptomatic_infective>  (mbs)){state.symptomatic_infective   = el;}
-                for(auto el : get_messages<typename population_group_defs::asymptomatic_infective> (mbs)){state.asymptomatic_infective  = el;}
-                for(auto el : get_messages<typename population_group_defs::quarantined_susceptible>(mbs)){state.quarantined_susceptible = el;}
-                //for(auto el : get_messages<typename population_group_defs::quarantined_exposed>    (mbs)){state.quarantined_exposed     = el;}
-                //for(auto el : get_messages<typename population_group_defs::quarantined_infective>  (mbs)){state.quarantined_infective   = el;}
+            void external_transition(TIME t, typename make_message_bags<input_ports>::type mbs) {
+                //for(auto el : get_messages<typename population_group_defs::susceptible>            (mbs)){state.S  = el;}
+                //for(auto el : get_messages<typename population_group_defs::exposed>                (mbs)){state.E  = el;}
+                for(auto el : get_messages<typename population_group_defs::symptomatic_infective>  (mbs)){state.I  = el;}
+                for(auto el : get_messages<typename population_group_defs::asymptomatic_infective> (mbs)){state.A  = el;}
+                for(auto el : get_messages<typename population_group_defs::quarantined_susceptible>(mbs)){state.Sq = el;}
+                //for(auto el : get_messages<typename population_group_defs::quarantined_exposed>    (mbs)){state.Eq = el;}
+                //for(auto el : get_messages<typename population_group_defs::quarantined_infective>  (mbs)){state.H  = el;}
 
+                //susceptible
+                state.population_delta = (
+                    -S_to_E (c, b, q, state.population, state.I, state.A)
+                    -S_to_Eq(c, b, q, state.population, state.I, state.A)
+                    -S_to_Sq(c, b, q, state.population, state.I, state.A)
+                    +Sq_to_S(l, state.Sq)
+                )*dt;
 
-                // S'  = -((c*b) + (c*q*(1-b))) *  S * (I + A) + (l * Sq)
-                state.population_delta = (-((c*b) + (c*q*(1-b))) *  state.population * (state.symptomatic_infective + state.asymptomatic_infective) + (l * state.quarantined_susceptible))*dt;
                 state.report_queued = true;
             }
 
@@ -126,11 +131,11 @@ using namespace std;
 
             // output function
             typename make_message_bags<output_ports>::type output() const {
-              typename make_message_bags<output_ports>::type bags;
-              if(state.report_queued == true){
-                get_messages<typename population_group_defs::report>(bags).push_back(state.population + state.population_delta);
-              }
-              return bags;
+                typename make_message_bags<output_ports>::type bags;
+                if(state.report_queued == true){
+                    get_messages<typename population_group_defs::report>(bags).push_back(max(0.0, state.population+state.population_delta));
+                }
+                return bags;
             }
 
             // time_advance function
@@ -145,7 +150,7 @@ using namespace std;
             friend std::ostringstream& operator<<(std::ostringstream& os, const typename susceptible<TIME>::state_type& i) {
                  os.precision(2);
                 os << fixed;
-                os << "{\"susceptible\":" << i.population+i.population_delta << "}";
+                os << "{\"susceptible\":" << max(0.0, i.population+i.population_delta) << "}";
             return os;
             }
         };

@@ -1,98 +1,339 @@
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
+import math
 import csv
 import os
+import datetime
+
+def set_the_floor(x, y=0.01):
+    return x#max(x, y)
+
+
+def one_file(name):
+
+
+    #with open(f"./csv/{c},{b},{q},{e},{l},{n},{di},{dq},{yi},{ya},{yh},{a},{susceptible},{exposed},{symptomatic},{asymptomatic},seird.csv", 'w') as o_file:
+    #o_file.write("time, susceptible, exposed, symptomatic_infective, asymptomatic_infective, quarantined_susceptible, quarantined_exposed, quarantined_infective, recovered, deceased\n");
+
+    #for root, _, files in os.walk("./csv"):
+    #    for name in files:
+
+    plt.figure(figsize=(11, 8.5))
+
+    name_parts = name.split(',')
+    contact_rate                  = float(name_parts[0])
+    exposure_chance               = float(name_parts[1])
+    contact_trace_chance          = float(name_parts[2])
+    incubation_rate               = float(name_parts[3])
+    false_positive_q_release_rate = float(name_parts[4])
+    symptom_chance                = float(name_parts[5])
+    self_q_rate                   = float(name_parts[6])
+    q_incubation_rate             = float(name_parts[7])
+    recovery_rate_I               = float(name_parts[8])
+    recovery_rate_A               = float(name_parts[9])
+    recovery_rate_Q               = float(name_parts[10])
+    death_rate                    = float(name_parts[11])
+    initial_susceptible           = float(name_parts[12])
+    initial_exposed               = float(name_parts[13])
+    initial_symptomatic           = float(name_parts[14])
+    initial_asymptomatic          = float(name_parts[15])
+
+    plt.title(f"Contact Rate: {contact_rate}, Exposure Chance: {exposure_chance}, Contact Trace Chance: {contact_trace_chance}, Incubation Rate: {incubation_rate}, Q Release Rate: {false_positive_q_release_rate},\n"+
+              f"Symptom Chance: {symptom_chance}, Self Q Rate: {self_q_rate}, Q Incubation Rate: {q_incubation_rate}, Recovery Rate I: {recovery_rate_I},\n"+
+              f"Recovery Rate A: {recovery_rate_A}, Recovery Rate Q: {recovery_rate_Q}, Death Rate: {death_rate}")
+
+    with open(os.path.join("./csv", name)) as csv:
+    #with open("./csv/seird.csv") as csv:
+        l_time                    = []
+        l_susceptible             = []
+        l_exposed                 = []
+        l_symptomatic_infective   = []
+        l_asymptomatic_infective  = []
+        l_quarantined_susceptible = []
+        l_quarantined_exposed     = []
+        l_quarantined_infective   = []
+        l_recovered               = []
+        l_deceased                = []
+
+        peek_exposed                 = (0, 0)
+        peek_symptomatic_infective   = (0, 0)
+        peek_asymptomatic_infective  = (0, 0)
+        peek_quarantined_susceptible = (0, 0)
+        peek_quarantined_exposed     = (0, 0)
+        peek_quarantined_infective   = (0, 0)
+
+
+        csv.readline()
+        for line in csv:
+            parts = [float(part) for part in line.split(', ')]
+            time                    = parts[0]
+            susceptible             = parts[1]
+            exposed                 = parts[2]
+            symptomatic_infective   = parts[3]
+            asymptomatic_infective  = parts[4]
+            quarantined_susceptible = parts[5]
+            quarantined_exposed     = parts[6]
+            quarantined_infective   = parts[7]
+            recovered               = parts[8]
+            deceased                = parts[9]
+
+            l_time.append(time)
+            l_susceptible.append(susceptible)
+            l_exposed.append(exposed)
+            l_symptomatic_infective.append(symptomatic_infective)
+            l_asymptomatic_infective.append(asymptomatic_infective)
+            l_quarantined_susceptible.append(quarantined_susceptible)
+            l_quarantined_exposed.append(quarantined_exposed)
+            l_quarantined_infective.append(quarantined_infective)
+            l_recovered.append(recovered)
+            l_deceased.append(deceased)
+
+            if peek_exposed[1] < exposed:
+                peek_exposed = (time, exposed)
+            if peek_symptomatic_infective[1] < symptomatic_infective:
+                peek_symptomatic_infective = (time, symptomatic_infective)
+            if peek_asymptomatic_infective[1] < asymptomatic_infective:
+                peek_asymptomatic_infective = (time, asymptomatic_infective)
+            if peek_quarantined_susceptible[1] < quarantined_susceptible:
+                peek_quarantined_susceptible = (time, quarantined_susceptible)
+            if peek_quarantined_exposed[1] < quarantined_exposed:
+                peek_quarantined_exposed = (time, quarantined_exposed)
+            if peek_quarantined_infective[1] < quarantined_infective:
+                peek_quarantined_infective = (time, quarantined_infective)
+
+
+            if time > 55:#sum(parts[1:8]) < sum(parts[1:])/1000:
+                break
+
+        #plt.scatter(x, y, s=None, c=None, marker=None, cmap=None, norm=None, vmin=None, vmax=None, alpha=None, linewidths=None, verts=None, edgecolors=None, *, plotnonfinite=False, data=None, **kwargs)
+        #plt.yscale("log")
+        #plt.plot(l_time, l_time,                    label='time')
+        #plt.plot(l_time, l_susceptible,             label='Susceptible')
+        #plt.plot(l_time, l_exposed,                 label='Exposed')
+        #plt.plot(l_time, l_symptomatic_infective,   label='Symptomatic Infective')
+        #plt.plot(l_time, l_asymptomatic_infective,  label='Asymptomatic Infective')
+        #plt.plot(l_time, l_quarantined_susceptible, label='Quarantined Susceptible')
+        #plt.plot(l_time, l_quarantined_exposed,     label='Quarantined Exposed')
+        #plt.plot(l_time, l_quarantined_infective,   label='Quarantined Infective')
+        #plt.plot(l_time, l_recovered,               label='Recovered')
+        #plt.plot(l_time, l_deceased,                label='Deceased')
+
+
+        plt.plot(l_time, [math.log10(i) for i in l_symptomatic_infective],   label='Symptomatic Infective')
+
+        '''
+        total_initial_pop =(l_susceptible[0] +
+                            l_exposed[0] +
+                            l_symptomatic_infective[0] +
+                            l_asymptomatic_infective[0] +
+                            l_quarantined_susceptible[0] +
+                            l_quarantined_exposed[0] +
+                            l_quarantined_infective[0] +
+                            l_recovered[0] +
+                            l_deceased[0])
+
+        plt.text(l_time[0], total_initial_pop, f"Initial Population: {total_initial_pop}", horizontalalignment='left')
+        plt.text(l_time[-1], l_recovered[-1],f"Recovered: {l_recovered[-1]}", horizontalalignment='right')
+        plt.text(l_time[-1], l_deceased[-1], f"Deceased: {l_deceased[-1]}",   horizontalalignment='right')
+
+        if peek_exposed[1]                 > 0:
+            plt.text(peek_exposed[0],                 peek_exposed[1],                 f"Peak Exposed: {peek_exposed[1]}",                            horizontalalignment='left')
+        if peek_symptomatic_infective[1]   > 0:
+            plt.text(peek_symptomatic_infective[0],   peek_symptomatic_infective[1],   f"Peak Symptomatic Infective: {peek_symptomatic_infective[1]}",     horizontalalignment='left')
+        if peek_asymptomatic_infective[1]  > 0:
+            plt.text(peek_asymptomatic_infective[0],  peek_asymptomatic_infective[1],  f"Peak Asymptomatic Infective: {peek_asymptomatic_infective[1]}",   horizontalalignment='left')
+        if peek_quarantined_susceptible[1] > 0:
+            plt.text(peek_quarantined_susceptible[0], peek_quarantined_susceptible[1], f"Peak Quarantined Susceptible: {peek_quarantined_susceptible[1]}", horizontalalignment='left')
+        if peek_quarantined_exposed[1]     > 0:
+            plt.text(peek_quarantined_exposed[0],     peek_quarantined_exposed[1],     f"Peak Quarantined Exposed: {peek_quarantined_exposed[1]}",         horizontalalignment='left')
+        if peek_quarantined_infective[1]   > 0:
+            plt.text(peek_quarantined_infective[0],   peek_quarantined_infective[1],   f"Peak Quarantined Infective: {peek_quarantined_infective[1]}",     horizontalalignment='left')
+        '''
+
+
+        plt.xlim(0, 55)
+        plt.ylim(1, 5.5)
+        plt.legend()
+        plt.show()
+        #figname = name[:-len(".csv")]+".png"
+        #print(figname)
+        #plt.savefig(os.path.join("./figures", figname))
+        plt.close()
+
+
 
 def main():
-    i = 0
-    total_files = len(os.listdir("./csv"))
 
-    ax = plt.figure(figsize=(10,10)).add_subplot(111, projection='3d')
-    ax.set_xlabel('Consumption mean / Consumption standard deviation')
-    ax.set_ylabel('Production rate / Consumption mean')
-    ax.set_zlabel('Minimum stockpile')
+    #with open(f"./csv/{c},{b},{q},{e},{l},{n},{di},{dq},{yi},{ya},{yh},{a},{susceptible},{exposed},{symptomatic},{asymptomatic},seird.csv", 'w') as o_file:
+    #o_file.write("time, susceptible, exposed, symptomatic_infective, asymptomatic_infective, quarantined_susceptible, quarantined_exposed, quarantined_infective, recovered, deceased\n");
 
-    x = [[],[],[],[]]
-    y = [[],[],[],[]]
-    z = [[],[],[],[]]
-    #plt.title("What to call this plot")
+    os.system("mkdir -p ./figures/ ./figures.old/")
+    os.system("mv ./figures/* ./figures.old/")
+    files = []
 
-    for root, dirs, files in os.walk("./csv"):
-        for name in files:
-            #print(os.path.join(root, name))
+    for root, _, names in os.walk("./csv"):
+        for name in names:
+            name_parts = name.split(',')
+            files.append((
+                float(name_parts[0]),
+                float(name_parts[1]),
+                float(name_parts[2]),
+                float(name_parts[3]),
+                float(name_parts[4]),
+                float(name_parts[5]),
+                float(name_parts[6]),
+                float(name_parts[7]),
+                float(name_parts[8]),
+                float(name_parts[9]),
+                float(name_parts[10]),
+                float(name_parts[11]),
 
-            #comment out values that you do not need to speed up the plotter
-            name_parts = name[:-len(".csv")].split('-')
+                name
+            ))
 
-            load_interval           = int(name_parts[0])
-            load_size               = int(name_parts[1])
-            clean_shipment_interval = int(name_parts[2])
-            clean_shipment_size     = int(name_parts[3])
-            dirty_shipment_interval = int(name_parts[4])
-            usage_mean              = int(name_parts[5])
-            usage_sd                = int(name_parts[6])
-            stockpile               = int(name_parts[7])
-            #run_time                = int(name_parts[8])
+    files.sort()
 
-            min_clean_pile = stockpile
-            max_outage = 0
+    for file_number, name_parts in enumerate(files):
 
-            with open(os.path.join(root, name)) as csv:
-                csv.readline()
-                for line in csv:
-                    #comment out values that you do not need to speed up the plotter
-                    line_parts = line.split(', ')
+        plt.figure(figsize=(11, 8.5))
 
-                    #time                              = int(line_parts[0])
-                    #cleaning_amount_dirty             = int(line_parts[1])
-                    #cleaning_load_size                = int(line_parts[2])
-                    #cleaning_load_time_remaining      = int(line_parts[3])
-                    #cleaning_load_delay_time          = int(line_parts[4])
-                    #shipping_amount_clean             = int(line_parts[5])
-                    #shipping_time_until_next_shipment = int(line_parts[6])
-                    hospital_amount_clean             = int(line_parts[7])
-                    #hospital_amount_dirty             = int(line_parts[8])
-                    #hospital_outage                   = int(line_parts[9])
-                    #hospital_time_until_next_shipment = int(line_parts[10])
-                    #m_cleaning_clean                  = int(line_parts[11])
-                    #m_cleaning_non_full_load          = int(line_parts[12])
-                    #m_cleaning_load_delayed           = int(line_parts[13])
-                    #m_shipping_clean                  = int(line_parts[14])
-                    #m_shipping_short_delivery         = int(line_parts[15])
-                    #m_hospital_dirty                  = int(line_parts[16])
-                    m_hospital_outage                 = int(line_parts[17])
+        contact_rate                  = name_parts[0]
+        exposure_chance               = name_parts[1]
+        contact_trace_chance          = name_parts[2]
+        incubation_rate               = name_parts[3]
+        false_positive_q_release_rate = name_parts[4]
+        symptom_chance                = name_parts[5]
+        self_q_rate                   = name_parts[6]
+        q_incubation_rate             = name_parts[7]
+        recovery_rate_I               = name_parts[8]
+        recovery_rate_A               = name_parts[9]
+        recovery_rate_Q               = name_parts[10]
+        death_rate                    = name_parts[11]
+        name                          = name_parts[12]
 
-                    min_clean_pile = min(hospital_amount_clean, min_clean_pile)
-                    max_outage     = max(m_hospital_outage, max_outage)
-            t_x = usage_sd/usage_mean
-            t_y = min((load_size/load_interval),(clean_shipment_size/clean_shipment_interval)) / (usage_mean/dirty_shipment_interval)
-            key = (0, 2)[t_y >= 1]
-            if max_outage > 0:
-                x[key].append(t_x)
-                y[key].append(t_y)
-                z[key].append(-max_outage)
-            else:
-                x[key+1].append(t_x)
-                y[key+1].append(t_y)
-                z[key+1].append(min_clean_pile)
+        plt.title(f"Contact Rate: {contact_rate}, Exposure Chance: {exposure_chance}, Contact Trace Chance: {contact_trace_chance}, Incubation Rate: {incubation_rate},\n"+
+                  f"Q Release Rate: {false_positive_q_release_rate}, Symptom Chance: {symptom_chance}, Self Q Rate: {self_q_rate}, Q Incubation Rate: {q_incubation_rate},\n"
+                  f"Recovery Rate I: {recovery_rate_I}, Recovery Rate A: {recovery_rate_A}, Recovery Rate Q: {recovery_rate_Q}, Death Rate: {death_rate}")
+
+        with open(os.path.join(root, name)) as csv:
+        #with open("./csv/seird.csv") as csv:
+            l_time                    = []
+            l_susceptible             = []
+            l_exposed                 = []
+            l_symptomatic_infective   = []
+            l_asymptomatic_infective  = []
+            l_quarantined_susceptible = []
+            l_quarantined_exposed     = []
+            l_quarantined_infective   = []
+            l_recovered               = []
+            l_deceased                = []
+
+            peek_exposed                 = (0, 0)
+            peek_symptomatic_infective   = (0, 0)
+            peek_asymptomatic_infective  = (0, 0)
+            peek_quarantined_susceptible = (0, 0)
+            peek_quarantined_exposed     = (0, 0)
+            peek_quarantined_infective   = (0, 0)
 
 
-            if (i := i+1)%1000 == 0: #working in batches because appending to very long lists is slow in python
-                print(i, total_files)#A crude progress indicator
-                ax.scatter(x[0], y[0], z[0], marker='o', color=(1, 0, 0))# <1 production, with outage
-                ax.scatter(x[1], y[1], z[1], marker='o', color=(1, 1, 0))# <1 production, with no outage
-                ax.scatter(x[2], y[2], z[2], marker='o', color=(1, 0, 1))# >1 production, with outage
-                ax.scatter(x[3], y[3], z[3], marker='o', color=(0, 1, 0))# >1 production, with no outage
-                x = [[],[],[],[]]
-                y = [[],[],[],[]]
-                z = [[],[],[],[]]
+            csv.readline()
+            for line in csv:
+                parts = [float(part) for part in line.split(', ')]
+                time                    = parts[0]
+                susceptible             = parts[1]
+                exposed                 = parts[2]
+                symptomatic_infective   = parts[3]
+                asymptomatic_infective  = parts[4]
+                quarantined_susceptible = parts[5]
+                quarantined_exposed     = parts[6]
+                quarantined_infective   = parts[7]
+                recovered               = parts[8]
+                deceased                = parts[9]
 
-    ax.scatter(x[0], y[0], z[0], marker='o', color=(1, 0, 0))# <1 production, with outage
-    ax.scatter(x[1], y[1], z[1], marker='o', color=(1, 1, 0))# <1 production, with no outage
-    ax.scatter(x[2], y[2], z[2], marker='o', color=(1, 0, 1))# >1 production, with outage
-    ax.scatter(x[3], y[3], z[3], marker='o', color=(0, 1, 0))# >1 production, with no outage
-    plt.show()
-    return
+                l_time.append(time)
+                l_susceptible.append(susceptible)
+                l_exposed.append(exposed)
+                l_symptomatic_infective.append(symptomatic_infective)
+                l_asymptomatic_infective.append(asymptomatic_infective)
+                l_quarantined_susceptible.append(quarantined_susceptible)
+                l_quarantined_exposed.append(quarantined_exposed)
+                l_quarantined_infective.append(quarantined_infective)
+                l_recovered.append(recovered)
+                l_deceased.append(deceased)
+
+                if peek_exposed[1] < exposed:
+                    peek_exposed = (time, exposed)
+                if peek_symptomatic_infective[1] < symptomatic_infective:
+                    peek_symptomatic_infective = (time, symptomatic_infective)
+                if peek_asymptomatic_infective[1] < asymptomatic_infective:
+                    peek_asymptomatic_infective = (time, asymptomatic_infective)
+                if peek_quarantined_susceptible[1] < quarantined_susceptible:
+                    peek_quarantined_susceptible = (time, quarantined_susceptible)
+                if peek_quarantined_exposed[1] < quarantined_exposed:
+                    peek_quarantined_exposed = (time, quarantined_exposed)
+                if peek_quarantined_infective[1] < quarantined_infective:
+                    peek_quarantined_infective = (time, quarantined_infective)
+
+                if time > 55:#sum(parts[1:8]) < sum(parts[1:])/1000:
+                    break
+
+            #plt.scatter(x, y, s=None, c=None, marker=None, cmap=None, norm=None, vmin=None, vmax=None, alpha=None, linewidths=None, verts=None, edgecolors=None, *, plotnonfinite=False, data=None, **kwargs)
+            #plt.yscale("log")
+            #plt.plot(l_time, l_time,                    label='time')
+            #plt.plot(l_time, l_susceptible,             label='Susceptible')
+            #plt.plot(l_time, l_exposed,                 label='Exposed')
+            #plt.plot(l_time, l_symptomatic_infective,   label='Symptomatic Infective')
+            #plt.plot(l_time, l_asymptomatic_infective,  label='Asymptomatic Infective')
+            #plt.plot(l_time, l_quarantined_susceptible, label='Quarantined Susceptible')
+            #plt.plot(l_time, l_quarantined_exposed,     label='Quarantined Exposed')
+            #plt.plot(l_time, l_quarantined_infective,   label='Quarantined Infective')
+            #plt.plot(l_time, l_recovered,               label='Recovered')
+            #plt.plot(l_time, l_deceased,                label='Deceased')
+
+            plt.plot(l_time, [math.log10(i) for i in l_symptomatic_infective],   label='Symptomatic Infective')
+
+
+            '''
+            total_initial_pop =(l_susceptible[0] +
+                                l_exposed[0] +
+                                l_symptomatic_infective[0] +
+                                l_asymptomatic_infective[0] +
+                                l_quarantined_susceptible[0] +
+                                l_quarantined_exposed[0] +
+                                l_quarantined_infective[0] +
+                                l_recovered[0] +
+                                l_deceased[0])
+
+            plt.text(l_time[0], total_initial_pop, f"Initial Population: {total_initial_pop}", horizontalalignment='left')
+            plt.text(l_time[-1], l_recovered[-1],f"Recovered: {l_recovered[-1]}", horizontalalignment='right')
+            plt.text(l_time[-1], l_deceased[-1], f"Deceased: {l_deceased[-1]}",   horizontalalignment='right')
+            if peek_exposed[1]                 > 0:
+                plt.text(peek_exposed[0],                 peek_exposed[1],                 f"Peak Exposed: {peek_exposed[1]}",                            horizontalalignment='left')
+            if peek_symptomatic_infective[1]   > 0:
+                plt.text(peek_symptomatic_infective[0],   peek_symptomatic_infective[1],   f"Peak Symptomatic Infective: {peek_symptomatic_infective[1]}",     horizontalalignment='left')
+            if peek_asymptomatic_infective[1]  > 0:
+                plt.text(peek_asymptomatic_infective[0],  peek_asymptomatic_infective[1],  f"Peak Asymptomatic Infective: {peek_asymptomatic_infective[1]}",   horizontalalignment='left')
+            if peek_quarantined_susceptible[1] > 0:
+                plt.text(peek_quarantined_susceptible[0], peek_quarantined_susceptible[1], f"Peak Quarantined Susceptible: {peek_quarantined_susceptible[1]}", horizontalalignment='left')
+            if peek_quarantined_exposed[1]     > 0:
+                plt.text(peek_quarantined_exposed[0],     peek_quarantined_exposed[1],     f"Peak Quarantined Exposed: {peek_quarantined_exposed[1]}",         horizontalalignment='left')
+            if peek_quarantined_infective[1]   > 0:
+                plt.text(peek_quarantined_infective[0],   peek_quarantined_infective[1],   f"Peak Quarantined Infective: {peek_quarantined_infective[1]}",     horizontalalignment='left')
+            '''
+
+            plt.xlim(0, 55)
+            plt.ylim(1, 5.5)
+            plt.legend()
+            #plt.show()
+            figname = f"{file_number:0{1+len(str(len(files)))}},{name[:-len('.csv')]+'.png'}"
+            print(figname)
+            plt.savefig(os.path.join("./figures", figname))
+            plt.close()
+
+    os.system(f"convert -delay 50 -loop 0 -deconstruct ./figures/*.png ./gifs/{datetime.datetime.now().isoformat()}.gif")
+
+
 
 main()
+#one_file("14.781,2.1011e-08,1.8887e-07,0.14285714285714285,0.07142857142857142,0.86834,0.13266,0.1259,0.33029,0.13978,0.11624,1.7826e-05,11081000,105.1,27.679,53.839,seird.csv")
