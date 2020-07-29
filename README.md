@@ -1,6 +1,6 @@
 # SEIR-Asyn
 
-The model is based on a paper available here https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7074281/
+The model is based on the following paper: 
 
 Tang, B., Wang, X., Li, Q., Bragazzi, N. L., Tang, S., Xiao, Y., & Wu, J. (2020). <br>
 Estimation of the Transmission Risk of the 2019-nCoV and Its Implication for <br>
@@ -26,6 +26,8 @@ https://github.com/SimulationEverywhere-Models/Cadmium-SEIR-Asyn
 
 ## Model implimentation
 ### Parameters used in the model
+
+(These parameters can be modified following the instructions below)
 
 | Symbol | Value from paper | Description  |
 |--------|------------------|--------------|
