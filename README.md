@@ -56,61 +56,24 @@ https://github.com/SimulationEverywhere-Models/Cadmium-SEIR-Asyn
 
 |     |                      |                      |                      |          |
 |-----|----------------------|----------------------|----------------------|----------|
-| S'  | -S_to_E              | -S_to_Eq             | -S_to_Sq             | +Sq_to_S |
-|     | -(c×(I+A)×S×b×(1-q)) | -(c×(I+A)×S×b×q)     | -(c×(I+A)×S×(1-b)×q) | +(l×Sq)  |
+| S'  | -(c×(I+A)×S×b×(1-q)) | -(c×(I+A)×S×b×q)     | -(c×(I+A)×S×(1-b)×q) | +(l×Sq)  |
 |     |                      |                      |                      |          |
-| E'  | -E_to_I              | -E_to_A              | +S_to_E              |          |
-|     | -(e×n×E)             | -(e×(1-n)×E)         | +(c×(I+A)×S×b×(1-q)) |          |
+| E'  | -(e×n×E)             | -(e×(1-n)×E)         | +(c×(I+A)×S×b×(1-q)) |          |
 |     |                      |                      |                      |          |
-| I'  | -I_to_H              | -I_to_R              | -I_to_D              | +E_to_I  |
-|     | -(di×I)              | -(yi×I)              | -(a×I)               | +(e×n×E) |
+| I'  | -(di×I)              | -(yi×I)              | -(a×I)               | +(e×n×E) |
 |     |                      |                      |                      |          |
-| A'  | -A_to_R              | +E_to_A              |                      |          |
-|     | -(ya×A)              | +(e×(1-n)×E)         |                      |          |
+| A'  | -(ya×A)              | +(e×(1-n)×E)         |                      |          |
 |     |                      |                      |                      |          |
-| Sq' |  -Sq_to_S            | +S_to_Sq             |                      |          |
-|     | -(l×Sq)              | +(c×(I+A)×S×(1-b)×q) |                      |          |
+| Sq' | -(l×Sq)              | +(c×(I+A)×S×(1-b)×q) |                      |          |
 |     |                      |                      |                      |          |
-| Eq' | -Eq_to_H             | +S_to_Eq             |                      |          |
-|     | -(dq×Eq)             | +(c×(I+A)×S×b×q)     |                      |          |
+| Eq' | -(dq×Eq)             | +(c×(I+A)×S×b×q)     |                      |          |
 |     |                      |                      |                      |          |
-| H'  | -H_to_R              | -H_to_D              | +I_to_H              | +Eq_to_H |
-|     | -(yh×H)              | -(a×H)               | +(di×I)              | +(dq×Eq) |
+| H'  | -(yh×H)              | -(a×H)               | +(di×I)              | +(dq×Eq) |
 |     |                      |                      |                      |          |
-| R'  | +I_to_R              | +A_to_R              | +H_to_R              |          |
-|     | +(yi×I)              | +(ya×A)              | +(yh×H)              |          |
+| R'  | +(yi×I)              | +(ya×A)              | +(yh×H)              |          |
 |     |                      |                      |                      |          |
-| D'  | +I_to_D              | +H_to_D              |                      |          |
-|     | +(a×I)               | +(a×H)               |                      |          |
+| D'  | +(a×I)               | +(a×H)               |                      |          |
 
-
-### Population flow chart
-
-```mermaid
-graph LR
-S(Susceptible)
-E(Exposed)
-I(Symptomatic Infective)
-A(Asymptomatic Infective)
-Sq(Quarantined Susceptible)
-Eq(Quarantined Exposed)
-H(Quarantined Infective)
-R(Recovered)
-D(Deceased)
-S --"c×(I+A)×S×b×(1-q)"--> E
-S --"c×(I+A)×S×b×q"--> Eq
-S --"c×(I+A)×S×(1-b)×q"--> Sq
-E --"e×(1-n)×E"--> A
-E --"e×n×E"--> I
-I --"yi×I"--> R
-I --"a×I"--> D
-I --"di×I"--> H
-A --"ya×A"--> R
-Sq --"l×Sq"--> S
-Eq --"dq×Eq"--> H
-H --"yh×H"--> R
-H --"a×H"--> D
-```
 
 ## Run the model
 
