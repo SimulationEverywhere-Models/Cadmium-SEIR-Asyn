@@ -1,6 +1,10 @@
-# SEIRD
+# SEIR-Asyn
 
-The model is available in https://github.com/SimulationEverywhere-Models/Cadmium-SEIRD
+The model is based on a paper available here https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7074281/
+
+Tang, B., Wang, X., Li, Q., Bragazzi, N. L., Tang, S., Xiao, Y., & Wu, J. (2020). <br>
+Estimation of the Transmission Risk of the 2019-nCoV and Its Implication for <br>
+Public Health Interventions. *Journal of clinical medicine*, 9(2), 462. https://doi.org/10.3390/jcm9020462 <br>
 
 This instructions assume that:
 
@@ -20,13 +24,100 @@ https://github.com/SimulationEverywhere-Models/Cadmium-SEIR-Asyn
 
 3. Compile the model using the make file
 
+## Model implimentation
+### Parameters used in the model
+
+| Symbol | Value from paper | Description  |
+|--------|------------------|--------------|
+| c      | 14.781           | Contact rate per person per day |
+| b      | 2.1011e-8        | Probability of transmission per contact |
+| q      | 1.8887e-7        | Probability of being quarantined per contact |
+| e      | 0.142857         | Proportion of exposed individuals becoming infective per day |
+| l      | 0.071428         | Proportion of quarantined uninfected individuals being released per day |
+| n      | 0.86834          | Probability of having symptoms among infected individuals |
+| di     | 0.13266          | Proportion of symptomatic infective individuals going into quarantine per day |
+| dq     | 0.1259           | Proportion of quarantined exposed individuals progressing to quarantined infective per day |
+| yi     | 0.33029          | Proportion of symptomatic infective individuals recovering per day |
+| ya     | 0.13978          | Proportion of asymptomatic infective individuals recovering per day |
+| yh     | 0.11624          | Proportion of quarantined infective individuals recovering per day |
+| a      | 1.7826e-5        | Proportion of symptomatic infective and quarantined infective individuals dieing per day |
+|   |
+| S      | 11081000         | Initial susceptible population |
+| E      | 105.1            | Initial exposed population |
+| I      | 27.679           | Initial symptomatic infective population |
+| A      | 53.839           | Initial asymptomatic infective population |
+| Sq     | 739              | Initial quarantined susceptible population |
+| Eq     | 1.1642           | Initial quarantined exposed population |
+| H      | 1                | Initial quarantined infective population |
+| R      | 2                | Initial recovered population |
+| D      | 0                | Initial deceased population |
+
+### Equations used in the model
+
+|     |                      |                      |                      |          |
+|-----|----------------------|----------------------|----------------------|----------|
+| S'  | -S_to_E              | -S_to_Eq             | -S_to_Sq             | +Sq_to_S |
+|     | -(c×(I+A)×S×b×(1-q)) | -(c×(I+A)×S×b×q)     | -(c×(I+A)×S×(1-b)×q) | +(l×Sq)  |
+|     |                      |                      |                      |          |
+| E'  | -E_to_I              | -E_to_A              | +S_to_E              |          |
+|     | -(e×n×E)             | -(e×(1-n)×E)         | +(c×(I+A)×S×b×(1-q)) |          |
+|     |                      |                      |                      |          |
+| I'  | -I_to_H              | -I_to_R              | -I_to_D              | +E_to_I  |
+|     | -(di×I)              | -(yi×I)              | -(a×I)               | +(e×n×E) |
+|     |                      |                      |                      |          |
+| A'  | -A_to_R              | +E_to_A              |                      |          |
+|     | -(ya×A)              | +(e×(1-n)×E)         |                      |          |
+|     |                      |                      |                      |          |
+| Sq' |  -Sq_to_S            | +S_to_Sq             |                      |          |
+|     | -(l×Sq)              | +(c×(I+A)×S×(1-b)×q) |                      |          |
+|     |                      |                      |                      |          |
+| Eq' | -Eq_to_H             | +S_to_Eq             |                      |          |
+|     | -(dq×Eq)             | +(c×(I+A)×S×b×q)     |                      |          |
+|     |                      |                      |                      |          |
+| H'  | -H_to_R              | -H_to_D              | +I_to_H              | +Eq_to_H |
+|     | -(yh×H)              | -(a×H)               | +(di×I)              | +(dq×Eq) |
+|     |                      |                      |                      |          |
+| R'  | +I_to_R              | +A_to_R              | +H_to_R              |          |
+|     | +(yi×I)              | +(ya×A)              | +(yh×H)              |          |
+|     |                      |                      |                      |          |
+| D'  | +I_to_D              | +H_to_D              |                      |          |
+|     | +(a×I)               | +(a×H)               |                      |          |
+
+
+### Population flow chart
+
+```mermaid
+graph LR
+S(Susceptible)
+E(Exposed)
+I(Symptomatic Infective)
+A(Asymptomatic Infective)
+Sq(Quarantined Susceptible)
+Eq(Quarantined Exposed)
+H(Quarantined Infective)
+R(Recovered)
+D(Deceased)
+S --"c×(I+A)×S×b×(1-q)"--> E
+S --"c×(I+A)×S×b×q"--> Eq
+S --"c×(I+A)×S×(1-b)×q"--> Sq
+E --"e×(1-n)×E"--> A
+E --"e×n×E"--> I
+I --"yi×I"--> R
+I --"a×I"--> D
+I --"di×I"--> H
+A --"ya×A"--> R
+Sq --"l×Sq"--> S
+Eq --"dq×Eq"--> H
+H --"yh×H"--> R
+H --"a×H"--> D
+
 ## Run the model
 
 ### OPTION 1 - Default parameters
 
-> ./bin/SEIRD (linux)
+> ./bin/SEIR_Asyn (linux)
 
-> ./bin/SEIRD.exe (windows)
+> ./bin/SEIR_Asyn.exe (windows)
 
 ### OPTION 2 - Define your own parameters
 
@@ -34,9 +125,9 @@ Place a text file (e.g. my_data.txt) with the input parameters in the folder *in
 
 Run the program normally using
 
-> ./bin/SEIRD my_data.txt (linux)
+> ./bin/SEIR_Asyn my_data.txt (linux)
 
-> ./bin/SEIRD.exe my_data.txt (windows)
+> ./bin/SEIR_Asyn.exe my_data.txt (windows)
 
 **NOTE**
 Follow the instructions in input.txt for how to lay out your data
@@ -48,6 +139,6 @@ runner.py and plotter.py are python3 files that assume that you are in a linux l
 They both require modifying python3 sourcecode to use.
 
 runner.py has 2 options for a main-ish function. They both run the simulator with a cartesian product of possible inputs.
-main() starts at time=0, where main_c(csv_file_path, time) starts at the specified time with the new constants but the old populations and creates an output that resembles what would happen if the first sim had it's constants changed at some point in it's run.
+main() starts at time=0, where main_c(csv_file_path, time) starts at the specified time with the new constants but the old populations and creates an output that resembles what would happen if the first sim had it's constants changed at the specified time in it's run.
 
 plotter.py has a number of functions that read some or all of the .csv files that runner.py puts in ./csv and produces mathplotlib charts of them.

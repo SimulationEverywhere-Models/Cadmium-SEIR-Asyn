@@ -7,56 +7,56 @@
 ; ^[\s]*([^=;\n\r]+?)\s*=\s*([^;\n\r]+?)\s*(([;\n\r].*)|$)
 ;
 
-c  = 14.781    ;     Contact rate
-b  = 2.1011e-8 ;     Probability of transmission per contact
-q  = 1.8887e-7 ;     Quarantined rate of exposed individuals
-e  = 0.142857  ;1/7  Transition rate of exposed individuals to the infected class
-l  = 0.071428  ;1/14 Rate at which the quarantined uninfected contacts were released into the wider community
-n  = 0.86834   ;     Probability of having symptoms among infected individuals
-di = 0.13266   ;     Transition rate of symptomatic infected individuals to the uarantined infected class
-dq = 0.1259    ;     Transition rate of quarantined exposed individuals to the quarantined infected class
-yi = 0.33029   ;     Recovery rate of symptomatic infected individuals
-ya = 0.13978   ;     Recovery rate of asymptomatic infected individuals
-yh = 0.11624   ;     Recovery rate of quarantined infected individuals
-a  = 1.7826e-5 ;     Disease-induced death rate
+c  = 14.781     ;      Contact rate per person per day
+b  = 2.1011e-8  ;      Probability of transmission per contact
+q  = 1.8887e-7  ;      Probability of being quarantined per contact
+e  = 0.142857   ; 1/7  Proportion of exposed individuals becoming infective per day
+l  = 0.071428   ; 1/14 Proportion of quarantined uninfected individuals being released per day
+n  = 0.86834    ;      Probability of having symptoms among infective individuals
+di = 0.13266    ;      Proportion of symptomatic infective individuals going into quarantine per day
+dq = 0.1259     ;      Proportion of quarantined exposed individuals progressing to quarantined infective per day
+yi = 0.33029    ;      Proportion of symptomatic infective individuals recovering per day
+ya = 0.13978    ;      Proportion of asymptomatic infective individuals recovering per day
+yh = 0.11624    ;      Proportion of quarantined infective individuals recovering per day
+a  = 1.7826e-5  ;      Proportion of symptomatic infective and quarantined infective individuals dieing per day
 
-S  = 11081000  ;     Initial susceptible population
-E  = 105.1     ;     Initial exposed population
-I  = 27.679    ;     Initial symptomatic infected population
-A  = 53.839    ;     Initial asymptomatic infected population
-Sq = 739       ;     Initial quarantined susceptible population
-Eq = 1.1642    ;     Initial quarantined exposed population
-H  = 1         ;     Initial quarantined infected population
-R  = 2         ;     Initial recovered population
-D  = 0         ;     Initial deceased population
+S  = 11081000   ;      Initial susceptible population
+E  = 105.1      ;      Initial exposed population
+I  = 27.679     ;      Initial symptomatic infective population
+A  = 53.839     ;      Initial asymptomatic infective population
+Sq = 739        ;      Initial quarantined susceptible population
+Eq = 1.1642     ;      Initial quarantined exposed population
+H  = 1          ;      Initial quarantined infective population
+R  = 2          ;      Initial recovered population
+D  = 0          ;      Initial deceased population
 
 ;
-; The equations
+; The equations in use
 ;
-;     -S_to_E              -S_to_Eq         -S_to_Sq             +Sq_to_S
-;S' = -(c*(I+A)*S*b*(1-q)) -(c*(I+A)*S*b*q) -(c*(I+A)*S*(1-b)*q) +(l*Sq)
+;      -S_to_E              -S_to_Eq         -S_to_Sq             +Sq_to_S
+; S' = -(c*(I+A)*S*b*(1-q)) -(c*(I+A)*S*b*q) -(c*(I+A)*S*(1-b)*q) +(l*Sq)
 ;
-;     -E_to_I  -E_to_A      +S_to_E
-;E' = -(e*n*E) -(e*(1-n)*E) +(c*(I+A)*S*b*(1-q))
+;      -E_to_I  -E_to_A      +S_to_E
+; E' = -(e*n*E) -(e*(1-n)*E) +(c*(I+A)*S*b*(1-q))
 ;
-;     -I_to_H -I_to_R -I_to_D +E_to_I
-;I' = -(di*I) -(yi*I) -(a*I)  +(e*n*E)
+;      -I_to_H -I_to_R -I_to_D +E_to_I
+; I' = -(di*I) -(yi*I) -(a*I)  +(e*n*E)
 ;
-;     -A_to_R +E_to_A
-;A' = -(ya*A) +(e*(1-n)*E)
+;      -A_to_R +E_to_A
+; A' = -(ya*A) +(e*(1-n)*E)
 ;
-;      -Sq_to_S +S_to_Sq
-;Sq' = -(l*Sq)  +(c*(I+A)*S*(1-b)*q)
+;       -Sq_to_S +S_to_Sq
+; Sq' = -(l*Sq)  +(c*(I+A)*S*(1-b)*q)
 ;
-;      -Eq_to_H +S_to_Eq
-;Eq' = -(dq*Eq) +(c*(I+A)*S*b*q)
+;       -Eq_to_H +S_to_Eq
+; Eq' = -(dq*Eq) +(c*(I+A)*S*b*q)
 ;
-;     -H_to_R -H_to_D +I_to_H +Eq_to_H
-;H' = -(yh*H) -(a*H)  +(di*I) +(dq*Eq)
+;      -H_to_R -H_to_D +I_to_H +Eq_to_H
+; H' = -(yh*H) -(a*H)  +(di*I) +(dq*Eq)
 ;
-;     +I_to_R +A_to_R +H_to_R
-;R' = +(yi*I) +(ya*A) +(yh*H)
+;      +I_to_R +A_to_R +H_to_R
+; R' = +(yi*I) +(ya*A) +(yh*H)
 ;
-;     +I_to_D +H_to_D
-;D' = +(a*I)  +(a*H)
+;      +I_to_D +H_to_D
+; D' = +(a*I)  +(a*H)
 ;
