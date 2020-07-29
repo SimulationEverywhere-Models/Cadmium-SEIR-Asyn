@@ -54,7 +54,7 @@ https://github.com/SimulationEverywhere-Models/Cadmium-SEIR-Asyn
 | R      | 2                | Initial recovered population |
 | D      | 0                | Initial deceased population |
 
-### Equations used in the model
+### Differential equations used in the model
 
 |     |                      |                      |                      |          |
 |-----|----------------------|----------------------|----------------------|----------|
