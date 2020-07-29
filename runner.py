@@ -104,7 +104,7 @@ def run(o_file, c, b, q, e, l, n, di, dq, yi, ya, yh, a, S, E, I, A, Sq, Eq, H, 
         input_file.write(f"D  = {D};\n")
 
 
-    os.system("./bin/SEIRD auto_input.txt")
+    os.system("./bin/SEIR-Asyn auto_input.txt")
     for s in seird_state_output():
         o_file.write(f"{offset_time+s['time']}, {s['susceptible']}, {s['exposed']}, {s['symptomatic_infective']}, {s['asymptomatic_infective']}, {s['quarantined_susceptible']}, {s['quarantined_exposed']}, {s['quarantined_infective']}, {s['recovered']}, {s['deceased']}\n")
 
@@ -156,9 +156,9 @@ def c_main(i_file_name, offset_time):
     os.system("mkdir -p csv csv.old")
     os.system("mv ./csv/* ./csv.old/")
 
-    set_c            = [14.781*s for s in [1, 0.8, 0.5, 0.3, 0.1]]         #
+    set_c            = [14.781]#*s for s in [1, 0.8, 0.5, 0.3, 0.1]]         #
     set_b            = (2.1011e-8,)   #
-    set_q            = [1.8887e-7]#*s for s in [1, 5, 10, 15, 20]]#(numpy.logspace(-9, -3, num=35, endpoint=True, base=10.0))#1/50000,)#(numpy.arange(0, 0.76, 0.05))       #change of each contact being traced
+    set_q            = [1.8887e-7*s for s in [1, 5, 10, 15, 20]]#(numpy.logspace(-9, -3, num=35, endpoint=True, base=10.0))#1/50000,)#(numpy.arange(0, 0.76, 0.05))       #change of each contact being traced
     set_e            = (1/7,)       #E to (I || A)
     set_l            = (1/14,)      #Sq to S
     set_n            = (0.86834,)#(numpy.arange(0, 1, 0.1))         #I and not A

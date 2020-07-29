@@ -1,7 +1,0 @@
-mortality =
-infectivity period =
-dt =
-incubation period =
-total population =
-initial infective =
-transmission rate =

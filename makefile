@@ -18,7 +18,7 @@ main_top.o: top_model/main.cpp
 
 #TARGET TO COMPILE ONLY ABP SIMULATOR
 all: main_top.o
-	$(CC) -g -o bin/SEIRD build/main_top.o
+	$(CC) -g -o bin/SEIR-Asyn build/main_top.o
 
 #CLEAN COMMANDS
 clean:

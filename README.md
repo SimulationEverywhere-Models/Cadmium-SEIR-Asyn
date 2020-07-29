@@ -7,7 +7,7 @@ This instructions assume that:
 1. Cadmium has been installed following the instructions in the manual:
 http://www.sce.carleton.ca/courses/sysc-5104/lib/exe/fetch.php?media=cadmiumusermanual.pdf
 
-2. The SEIRD model is cloned inside the folder: Cadmium-Simulation-Environment/DEVS-Models
+2. The SEIR-Asyn model is cloned inside the folder: Cadmium-Simulation-Environment/DEVS-Models
 (see the installation manual)
 
 ## Compile the model
@@ -16,7 +16,7 @@ http://www.sce.carleton.ca/courses/sysc-5104/lib/exe/fetch.php?media=cadmiumuser
 http://www.sce.carleton.ca/courses/sysc-5104/lib/exe/fetch.php?media=cadmiumusermanual.pdf
 
 2. Clone the repository inside the folder: *Cadmium-Simulation-Environment/DEVS-Models*
-https://github.com/SimulationEverywhere-Models/Cadmium-SEIRD
+https://github.com/SimulationEverywhere-Models/Cadmium-SEIR-Asyn
 
 3. Compile the model using the make file
 
@@ -28,34 +28,26 @@ https://github.com/SimulationEverywhere-Models/Cadmium-SEIRD
 
 > ./bin/SEIRD.exe (windows)
 
-### OPTION 2 - Define your own parameters 
+### OPTION 2 - Define your own parameters
 
-Place the text file (e.g. my_data.txt) with the input parameters in the folder *input_data*
+Place a text file (e.g. my_data.txt) with the input parameters in the folder *input_data*
 
 Run the program normally using
 
 > ./bin/SEIRD my_data.txt (linux)
 
 > ./bin/SEIRD.exe my_data.txt (windows)
- 
+
 **NOTE**
-1. The program requires that the data to be in a specific order.
-To ensure this requirement is satisfied, we provide a template.txt file where the user can add the parameters
-
-When inputting data values please do not add additional whitespace. 
-One is fine but the program will not recognise data after that.
-Examples
-
-> mortality = 10.3  //okay
-
-> mortality =10.3   //okay
-
-> mortality =  10.3 //NOT okay 
-
-2. Ensure all the data is inputted, otherwise the program will not run and it will display an appropriate error message.
-It will only display the first missing data tag it encounters and any subsequent tags will not be read
+Follow the instructions in input.txt for how to lay out your data
 
 ## Visualize the results
 
-1. Execute the python notebook. 
-The second graph is only relevant if you provide benchmark results (see folder notebooks/data)
+runner.py and plotter.py are python3 files that assume that you are in a linux like environment and that they are run from the root of this repo.
+
+They both require modifying python3 sourcecode to use.
+
+runner.py has 2 options for a main-ish function. They both run the simulator with a cartesian product of possible inputs.
+main() starts at time=0, where main_c(csv_file_path, time) starts at the specified time with the new constants but the old populations and creates an output that resembles what would happen if the first sim had it's constants changed at some point in it's run.
+
+plotter.py has a number of functions that read some or all of the .csv files that runner.py puts in ./csv and produces mathplotlib charts of them.
