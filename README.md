@@ -54,24 +54,14 @@ https://github.com/SimulationEverywhere-Models/Cadmium-SEIR-Asyn
 
 ### Equations used in the model
 
-|     |                      |                      |                      |          |
-|-----|----------------------|----------------------|----------------------|----------|
 | S'  | -(c×(I+A)×S×b×(1-q)) | -(c×(I+A)×S×b×q)     | -(c×(I+A)×S×(1-b)×q) | +(l×Sq)  |
-|     |                      |                      |                      |          |
 | E'  | -(e×n×E)             | -(e×(1-n)×E)         | +(c×(I+A)×S×b×(1-q)) |          |
-|     |                      |                      |                      |          |
 | I'  | -(di×I)              | -(yi×I)              | -(a×I)               | +(e×n×E) |
-|     |                      |                      |                      |          |
 | A'  | -(ya×A)              | +(e×(1-n)×E)         |                      |          |
-|     |                      |                      |                      |          |
 | Sq' | -(l×Sq)              | +(c×(I+A)×S×(1-b)×q) |                      |          |
-|     |                      |                      |                      |          |
 | Eq' | -(dq×Eq)             | +(c×(I+A)×S×b×q)     |                      |          |
-|     |                      |                      |                      |          |
 | H'  | -(yh×H)              | -(a×H)               | +(di×I)              | +(dq×Eq) |
-|     |                      |                      |                      |          |
 | R'  | +(yi×I)              | +(ya×A)              | +(yh×H)              |          |
-|     |                      |                      |                      |          |
 | D'  | +(a×I)               | +(a×H)               |                      |          |
 
 
