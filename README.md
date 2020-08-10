@@ -1,6 +1,6 @@
 # SEIR-Asyn
 
-The model is based on the following paper: 
+The model is based on the following paper:
 
 Tang, B., Wang, X., Li, Q., Bragazzi, N. L., Tang, S., Xiao, Y., & Wu, J. (2020). <br>
 Estimation of the Transmission Risk of the 2019-nCoV and Its Implication for <br>
@@ -29,44 +29,44 @@ https://github.com/SimulationEverywhere-Models/Cadmium-SEIR-Asyn
 
 (These parameters can be modified following the instructions below)
 
-| Symbol | Value from paper | Description  |
-|--------|------------------|--------------|
-| c      | 14.781           | Contact rate per person per day |
-| b      | 2.1011e-8        | Probability of transmission per contact |
-| q      | 1.8887e-7        | Probability of being quarantined per contact |
-| e      | 0.142857         | Proportion of exposed individuals becoming infective per day |
-| l      | 0.071428         | Proportion of quarantined uninfected individuals being released per day |
-| n      | 0.86834          | Probability of having symptoms among infected individuals |
-| di     | 0.13266          | Proportion of symptomatic infective individuals going into quarantine per day |
-| dq     | 0.1259           | Proportion of quarantined exposed individuals progressing to quarantined infective per day |
-| yi     | 0.33029          | Proportion of symptomatic infective individuals recovering per day |
-| ya     | 0.13978          | Proportion of asymptomatic infective individuals recovering per day |
-| yh     | 0.11624          | Proportion of quarantined infective individuals recovering per day |
-| a      | 1.7826e-5        | Proportion of symptomatic infective and quarantined infective individuals dieing per day |
-|   |
-| S      | 11081000         | Initial susceptible population |
-| E      | 105.1            | Initial exposed population |
-| I      | 27.679           | Initial symptomatic infective population |
-| A      | 53.839           | Initial asymptomatic infective population |
-| Sq     | 739              | Initial quarantined susceptible population |
-| Eq     | 1.1642           | Initial quarantined exposed population |
-| H      | 1                | Initial quarantined infective population |
-| R      | 2                | Initial recovered population |
-| D      | 0                | Initial deceased population |
+| Symbol | Symbol in paper | Value from paper | Description                                                                                |
+|--------|-----------------|------------------|--------------------------------------------------------------------------------------------|
+| c      | c               | 14.781           | Contact rate per person per day                                                            |
+| b      | β               | 2.1011e-8        | Probability of transmission per contact                                                    |
+| q      | q               | 1.8887e-7        | Probability of being quarantined per contact                                               |
+| e      | σ               | 0.142857         | Proportion of exposed individuals becoming infective per day                               |
+| l      | λ               | 0.071428         | Proportion of quarantined uninfected individuals being released per day                    |
+| n      | ϱ               | 0.86834          | Probability of having symptoms among infected individuals                                  |
+| di     | δ<sub>I</sub>   | 0.13266          | Proportion of symptomatic infective individuals going into quarantine per day              |
+| dq     | δ<sub>q</sub>   | 0.1259           | Proportion of quarantined exposed individuals progressing to quarantined infective per day |
+| yi     | γ<sub>I</sub>   | 0.33029          | Proportion of symptomatic infective individuals recovering per day                         |
+| ya     | γ<sub>A</sub>   | 0.13978          | Proportion of asymptomatic infective individuals recovering per day                        |
+| yh     | γ<sub>H</sub>   | 0.11624          | Proportion of quarantined infective individuals recovering per day                         |
+| a      | α               | 1.7826e-5        | Proportion of symptomatic infective and quarantined infective individuals dieing per day   |
+|        |                 |                  |                                                                                            |
+| S      | S               | 11081000         | Initial susceptible population                                                             |
+| E      | E               | 105.1            | Initial exposed population                                                                 |
+| I      | I               | 27.679           | Initial symptomatic infective population                                                   |
+| A      | A               | 53.839           | Initial asymptomatic infective population                                                  |
+| Sq     | S<sub>q</sub>   | 739              | Initial quarantined susceptible population                                                 |
+| Eq     | E<sub>q</sub>   | 1.1642           | Initial quarantined exposed population                                                     |
+| H      | H               | 1                | Initial quarantined infective population                                                   |
+| R      | R               | 2                | Initial recovered population                                                               |
+| D      | D               | 0                | Initial deceased population                                                                |
 
 ### Differential equations used in the model
 
-|     |                      |                      |                      |          |
-|-----|----------------------|----------------------|----------------------|----------|
-| S'  | -(c×(I+A)×S×b×(1-q)) | -(c×(I+A)×S×b×q)     | -(c×(I+A)×S×(1-b)×q) | +(l×Sq)  |
-| E'  | -(e×n×E)             | -(e×(1-n)×E)         | +(c×(I+A)×S×b×(1-q)) |          |
-| I'  | -(di×I)              | -(yi×I)              | -(a×I)               | +(e×n×E) |
-| A'  | -(ya×A)              | +(e×(1-n)×E)         |                      |          |
-| Sq' | -(l×Sq)              | +(c×(I+A)×S×(1-b)×q) |                      |          |
-| Eq' | -(dq×Eq)             | +(c×(I+A)×S×b×q)     |                      |          |
-| H'  | -(yh×H)              | -(a×H)               | +(di×I)              | +(dq×Eq) |
-| R'  | +(yi×I)              | +(ya×A)              | +(yh×H)              |          |
-| D'  | +(a×I)               | +(a×H)               |                      |          |
+| Class | Equation in paper             | Equation in implementation                                            |
+|-------|-------------------------------|-----------------------------------------------------------------------|
+| S'    | -(b×c+c×q×(1-b))×S×(I+A)+l×Sq | -(c×(I+A)×S×b×(1-q)) - (c×(I+A)×S×b×q) - (c×(I+A)×S×(1-b)×q) + (l×Sq) |
+| E'    | b×c×(1-q)×S×(I+A)-e×E         | -(e×n×E) - (e×(1-n)×E) + (c×(I+A)×S×b×(1-q))                          |
+| I'    | e×n×E-(di+a+yi)×I             | -(di×I) - (yi×I) - (a×I) + (e×n×E)                                    |
+| A'    | e×(1-n)×E-ya×A                | -(ya×A) + (e×(1-n)×E)                                                 |
+| Sq'   | (1-b)×c×q×S×(I+A)-dq×Eq       | -(l×Sq) + (c×(I+A)×S×(1-b)×q)                                         |
+| Eq'   | b×c×q×S×(I+A)-dq×E            | -(dq×Eq) + (c×(I+A)×S×b×q)                                            |
+| H'    | di×I+dq×Eq-(a+yh)×H           | -(yh×H) - (a×H) + (di×I) + (dq×Eq)                                    |
+| R'    | yi×I+ya×A+yh×H                | +(yi×I) + (ya×A) + (yh×H)                                             |
+| D'    |                               | +(a×I) + (a×H)                                                        |
 
 
 ## Run the model
