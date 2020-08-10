@@ -525,11 +525,12 @@ def all_in_b():
         recovery_rate_A               = name_parts[9]
         recovery_rate_Q               = name_parts[10]
         death_rate                    = name_parts[11]
-        name                          = name_parts[12]
+        A_to_I_scaler_factor          = name_parts[12]
+        name                          = name_parts[13]
 
         #plt.title(f"Contact Rate: {contact_rate}, Exposure Chance: {exposure_chance}, Contact Trace Chance: {contact_trace_chance}, Incubation Rate: {incubation_rate},\n"+
         #          f"Q Release Rate: {false_positive_q_release_rate}, Symptom Chance: {symptom_chance}, Self Q Rate: {self_q_rate}, Q Incubation Rate: {q_incubation_rate},\n"
-        #          f"Recovery Rate I: {recovery_rate_I}, Recovery Rate A: {recovery_rate_A}, Recovery Rate Q: {recovery_rate_Q}, Death Rate: {death_rate}")
+        #          f"Recovery Rate I: {recovery_rate_I}, Recovery Rate A: {recovery_rate_A}, Recovery Rate Q: {recovery_rate_Q}, Death Rate: {death_rate}, A to I scaler: {A_to_I_scaler_factor}")
 
         with open(os.path.join(root, name)) as csv:
         #with open("./csv/seird.csv") as csv:

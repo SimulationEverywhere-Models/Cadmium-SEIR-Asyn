@@ -90,6 +90,7 @@ int main(int argc, char ** argv) {
     double ya = -1;// Recovery rate of asymptomatic infected individuals
     double yh = -1;// Recovery rate of quarantined infected individuals
     double a  = -1;// Disease-induced death rate
+    double t  = -1;// Conversion between infectivity without symptoms to infectivity with symptoms.
 
     double S  = -1;// Initial susceptible population
     double E  = -1;// Initial exposed population
@@ -139,6 +140,7 @@ int main(int argc, char ** argv) {
             if(key == "ya"){ya = value;}else
             if(key == "yh"){yh = value;}else
             if(key == "a" ){a  = value;}else
+            if(key == "t" ){t  = value;}else
             if(key == "S" ){S  = value;}else
             if(key == "E" ){E  = value;}else
             if(key == "I" ){I  = value;}else
@@ -166,6 +168,7 @@ int main(int argc, char ** argv) {
             ya >=0 &&
             yh >=0 &&
             a  >=0 &&
+            t  >=0 &&
             S  >=0 &&
             E  >=0 &&
             I  >=0 &&
@@ -189,6 +192,7 @@ int main(int argc, char ** argv) {
     constants[10] = ya;
     constants[11] = yh;
     constants[12] = a;
+    constants[13] = t;
 
     shared_ptr<dynamic::modeling::model> pop_susceptible             = dynamic::translate::make_dynamic_atomic_model<susceptible, double>            ("susceptible"            , move(S));
     shared_ptr<dynamic::modeling::model> pop_exposed                 = dynamic::translate::make_dynamic_atomic_model<exposed, double>                ("exposed"                , move(E));

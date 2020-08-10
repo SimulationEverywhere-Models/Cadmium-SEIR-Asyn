@@ -39,6 +39,7 @@ using namespace std;
             //double ya;// Recovery rate of asymptomatic infected individuals
             double yh;// Recovery rate of quarantined infected individuals
             double a;// Disease-induced death rate
+            //double t;//theta, conversion between infectivity without symptoms to infectivity with symptoms.
 
             // default constructor
             quarantined_infective() noexcept{
@@ -58,6 +59,7 @@ using namespace std;
                 //ya = constants[10];// Recovery rate of asymptomatic infected individuals
                 yh = constants[11];// Recovery rate of quarantined infected individuals
                 a  = constants[12];// Disease-induced death rate
+                //t  = constants[13];//theta, conversion between infectivity without symptoms to infectivity with symptoms.
 
                 state.population       = initial_population;
                 state.population_delta = 0;
@@ -101,7 +103,7 @@ using namespace std;
             }
 
             // external transition
-            void external_transition(TIME t, typename make_message_bags<input_ports>::type mbs) {
+            void external_transition(TIME _, typename make_message_bags<input_ports>::type mbs) {
                 //for(auto el : get_messages<typename population_group_defs::susceptible>            (mbs)){state.S  = el;}
                 //for(auto el : get_messages<typename population_group_defs::exposed>                (mbs)){state.E  = el;}
                 for(auto el : get_messages<typename population_group_defs::symptomatic_infective>  (mbs)){state.I  = el;}
@@ -122,7 +124,7 @@ using namespace std;
             // confluence transition
             void confluence_transition(TIME e, typename make_message_bags<input_ports>::type mbs) {
                 internal_transition();
-                external_transition(TIME(), std::move(mbs));
+                external_transition(e, std::move(mbs));
             }
 
 
