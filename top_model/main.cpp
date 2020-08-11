@@ -52,13 +52,13 @@ struct SEIRD_defs{
 };
 
 /*************** Loggers *******************/
-    static ofstream out_messages("simulation_results/SEIRD_output_messages.txt");
+    static ofstream out_messages("output_messages.txt");
     struct oss_sink_messages{
         static ostream& sink(){
             return out_messages;
         }
     };
-    static ofstream out_state("simulation_results/SEIRD_output_state.txt");
+    static ofstream out_state("output_state.txt");
     struct oss_sink_state{
         static ostream& sink(){
             return out_state;
@@ -109,9 +109,9 @@ int main(int argc, char ** argv) {
 	if(argc<2){
 		inputReader.open("input_data/input.txt");
 	}else{ //branch for providing filename
-		std::string temp = argv[1];
-		std::string filePath = "input_data/" + temp;
-		inputReader.open(filePath);
+		//std::string temp = argv[1];
+		//std::string filePath = "input_data/" + temp;
+		inputReader.open(argv[1]);
 	}
 
 	if(! inputReader.is_open()){

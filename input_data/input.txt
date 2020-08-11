@@ -19,7 +19,7 @@ yi = 0.33029    ;      Proportion of symptomatic infective individuals recoverin
 ya = 0.13978    ;      Proportion of asymptomatic infective individuals recovering per day
 yh = 0.11624    ;      Proportion of quarantined infective individuals recovering per day
 a  = 1.7826e-5  ;      Proportion of symptomatic infective and quarantined infective individuals dieing per day
-t  = 1          ;      Conversion between infectivity without symptoms to infectivity with symptoms
+t  = 0          ;      Conversion between infectivity without symptoms to infectivity with symptoms
 
 S  = 11081000   ;      Initial susceptible population
 E  = 105.1      ;      Initial exposed population
