@@ -1,4 +1,4 @@
-#runner.py by Griffin
+#runner.py by Griffin Barrett
 
 import os
 import subprocess
@@ -14,14 +14,14 @@ def _write_input(data, name, token, index):
         input_file.write(data)
     return os.path.abspath(path), 3
 
-def _run_sim(data, name, token, index):
+def _run_sim(executable_name, data, name, token, index):
     path, depth = _write_input(data, name, token, index)
     #if os.name == 'nt':
     #    return subprocess.Popen(f"cd {path} && {os.path.join(*itertools.repeat('..', depth), 'bin', 'hoya.exe')} 'input.json' > cout.log 2> cerr.log", shell=True), path, index
     #return subprocess.Popen(f"cd {path}; sleep {secrets.choice(list(range(1)))}; {os.path.join(*itertools.repeat('..', depth), 'bin', 'hoya')} './input.json' > ./cout.log 2> ./cerr.log", shell=True), path, index
     #else:
     with open(os.path.join(path, 'cout.log'), 'w') as cout, open(os.path.join(path, 'cerr.log'), 'w') as cerr:
-        return subprocess.Popen([os.path.join(*itertools.repeat("..", depth), 'bin', 'SEIR-Asyn'), 'input.txt'], cwd=path, stdout=cout, stderr=cerr), {
+        return subprocess.Popen([os.path.join(*itertools.repeat("..", depth), 'bin', executable_name), 'input.txt'], cwd=path, stdout=cout, stderr=cerr), {
             'root'    :path,
             'cout'    :os.path.join(path, 'cout.log'),
             'cerr'    :os.path.join(path, 'cerr.log'),
@@ -29,15 +29,15 @@ def _run_sim(data, name, token, index):
             'state'   :os.path.join(path, 'output_state.txt'),
             'messages':os.path.join(path, 'output_messages.txt')}, index
 
-def _run_next(name, data_set):
+def _run_next(executable_name, name, data_set):
     token = secrets.token_hex(16)
     for index, data in enumerate(data_set):
-        yield _run_sim(data, name, token, index)
+        yield _run_sim(executable_name, data, name, token, index)
 
-def run_sim_batched(data_set, batch_size = 1, name = None):
+def run_sim_batched(executable_name, data_set, batch_size = 1, name = None):
     #batch_size = int(0 if batch_size < 0 else batch_size)
     sentinel = object()
-    sims = _run_next(name, data_set)
+    sims = _run_next(executable_name, name, data_set)
 
     if batch_size < 0:
         for p in list(sims):
