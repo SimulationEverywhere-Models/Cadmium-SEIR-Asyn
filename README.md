@@ -43,6 +43,7 @@ https://github.com/SimulationEverywhere-Models/Cadmium-SEIR-Asyn
 | `ya`   | γ<sub>A</sub>   | 0.13978          | Proportion of asymptomatic infective individuals recovering per day                        |
 | `yh`   | γ<sub>H</sub>   | 0.11624          | Proportion of quarantined infective individuals recovering per day                         |
 | `a`    | α               | 1.7826e-5        | Proportion of symptomatic infective and quarantined infective individuals dieing per day   |
+| `t`    | θ               | 0                | How infective are asymptomatic infective people compaired to symptomatic infective people  |
 |        |                 |                  |                                                                                            |
 | `S`    | S               | 11081000         | Initial susceptible population                                                             |
 | `E`    | E               | 105.1            | Initial exposed population                                                                 |
@@ -56,17 +57,17 @@ https://github.com/SimulationEverywhere-Models/Cadmium-SEIR-Asyn
 
 ### Differential equations used in the model
 
-| Class | Equation in paper               | Equation in implementation                                              |
-|-------|---------------------------------|-------------------------------------------------------------------------|
-| `S'`  | `-(b×c+c×q×(1-b))×S×(I+A)+l×Sq` | `-(c×(I+A)×S×b×(1-q)) - (c×(I+A)×S×b×q) - (c×(I+A)×S×(1-b)×q) + (l×Sq)` |
-| `E'`  | `b×c×(1-q)×S×(I+A)-e×E`         | `-(e×n×E) - (e×(1-n)×E) + (c×(I+A)×S×b×(1-q))`                          |
-| `I'`  | `e×n×E-(di+a+yi)×I`             | `-(di×I) - (yi×I) - (a×I) + (e×n×E)`                                    |
-| `A'`  | `e×(1-n)×E-ya×A`                | `-(ya×A) + (e×(1-n)×E)`                                                 |
-| `Sq'` | `(1-b)×c×q×S×(I+A)-dq×Eq`       | `-(l×Sq) + (c×(I+A)×S×(1-b)×q)`                                         |
-| `Eq'` | `b×c×q×S×(I+A)-dq×E`            | `-(dq×Eq) + (c×(I+A)×S×b×q)`                                            |
-| `H'`  | `di×I+dq×Eq-(a+yh)×H`           | `-(yh×H) - (a×H) + (di×I) + (dq×Eq)`                                    |
-| `R'`  | `yi×I+ya×A+yh×H`                | `+(yi×I) + (ya×A) + (yh×H)`                                             |
-| `D'`  |                                 | `+(a×I) + (a×H)`                                                        |
+| Class | Equation in paper                 | Equation in implementation                                                  |
+|-------|-----------------------------------|-----------------------------------------------------------------------------|
+| `S'`  | `-(b×c+c×q×(1-b))×S×(I+θ×A)+l×Sq` | `-(c×(I+A)×S×b×(1-q)) - (c×(I+t×A)×S×b×q) - (c×(I+t×A)×S×(1-b)×q) + (l×Sq)` |
+| `E'`  | `b×c×(1-q)×S×(I+θ×A)-e×E`         | `-(e×n×E) - (e×(1-n)×E) + (c×(I+t×A)×S×b×(1-q))`                            |
+| `I'`  | `e×n×E-(di+a+yi)×I`               | `-(di×I) - (yi×I) - (a×I) + (e×n×E)`                                        |
+| `A'`  | `e×(1-n)×E-ya×A`                  | `-(ya×A) + (e×(1-n)×E)`                                                     |
+| `Sq'` | `(1-b)×c×q×S×(I+A)-dq×Eq`         | `-(l×Sq) + (c×(I+A)×S×(1-b)×q)`                                             |
+| `Eq'` | `b×c×q×S×(I+A)-dq×E`              | `-(dq×Eq) + (c×(I+A)×S×b×q)`                                                |
+| `H'`  | `di×I+dq×Eq-(a+yh)×H`             | `-(yh×H) - (a×H) + (di×I) + (dq×Eq)`                                        |
+| `R'`  | `yi×I+ya×A+yh×H`                  | `+(yi×I) + (ya×A) + (yh×H)`                                                 |
+| `D'`  |                                   | `+(a×I) + (a×H)`                                                            |
 
 
 ## Run the model
