@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS=-std=c++17
+CFLAGS=-std=c++20
 
 INCLUDECADMIUM=-I ../../cadmium/include
 INCLUDEDESTIMES=-I ../../DESTimes/include
