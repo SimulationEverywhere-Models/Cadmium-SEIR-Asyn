@@ -59,15 +59,15 @@ https://github.com/SimulationEverywhere-Models/Cadmium-SEIR-Asyn
 
 | Class | Equation in paper                 | Equation in implementation                                                  |
 |-------|-----------------------------------|-----------------------------------------------------------------------------|
-| `S'`  | `-(b×c+c×q×(1-b))×S×(I+θ×A)+l×Sq` | `-(c×(I+A)×S×b×(1-q)) - (c×(I+t×A)×S×b×q) - (c×(I+t×A)×S×(1-b)×q) + (l×Sq)` |
-| `E'`  | `b×c×(1-q)×S×(I+θ×A)-e×E`         | `-(e×n×E) - (e×(1-n)×E) + (c×(I+t×A)×S×b×(1-q))`                            |
+| `S'`  | `-(b×c+c×q×(1-b))×S×(I+t×A)+l×Sq` | `-(c×(I+A)×S×b×(1-q)) - (c×(I+t×A)×S×b×q) - (c×(I+t×A)×S×(1-b)×q) + (l×Sq)` |
+| `E'`  | `b×c×(1-q)×S×(I+t×A)-e×E`         | `-(e×n×E) - (e×(1-n)×E) + (c×(I+t×A)×S×b×(1-q))`                            |
 | `I'`  | `e×n×E-(di+a+yi)×I`               | `-(di×I) - (yi×I) - (a×I) + (e×n×E)`                                        |
 | `A'`  | `e×(1-n)×E-ya×A`                  | `-(ya×A) + (e×(1-n)×E)`                                                     |
 | `Sq'` | `(1-b)×c×q×S×(I+A)-dq×Eq`         | `-(l×Sq) + (c×(I+A)×S×(1-b)×q)`                                             |
 | `Eq'` | `b×c×q×S×(I+A)-dq×E`              | `-(dq×Eq) + (c×(I+A)×S×b×q)`                                                |
 | `H'`  | `di×I+dq×Eq-(a+yh)×H`             | `-(yh×H) - (a×H) + (di×I) + (dq×Eq)`                                        |
 | `R'`  | `yi×I+ya×A+yh×H`                  | `+(yi×I) + (ya×A) + (yh×H)`                                                 |
-| `D'`  |                                   | `+(a×I) + (a×H)`                                                            |
+| `D'`  | `[not directly modeled]`          | `+(a×I) + (a×H)`                                                            |
 
 
 ## Run the model
@@ -93,11 +93,8 @@ Follow the instructions in input.txt for how to lay out your data
 
 ## Visualize the results
 
-runner.py and plotter.py are python3 files that assume that you are in a linux like environment and that they are run from the root of this repo.
+runner.py and plotter.py are python3 files that assume that you are in a linux like environment.
 
-They both require modifying python3 sourcecode to use.
+runner.py contains the functions required to run the model repeatedly and in parallel with programatic arguments, and is meant to `import`ed
 
-runner.py has 2 options for a main-ish function. They both run the simulator with a cartesian product of possible inputs.
-main() starts at time=0, where main_c(csv_file_path, time) starts at the specified time with the new constants but the old populations and creates an output that resembles what would happen if the first sim had it's constants changed at the specified time in it's run.
-
-plotter.py has a number of functions that read some or all of the .csv files that runner.py puts in ./csv and produces mathplotlib charts of them.
+plotter.py contains the functions needed to read in the output of the model, and an example of how to use runner.py and mathplotlib to generate line graphs from the output

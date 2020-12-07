@@ -1,10 +1,8 @@
 bin/
 build/
-csv/
-csv.old/
+runs/
 figures/
-figures.old/
-gifs/
 simulation_results/
+__pycache__/
 
 input_data/auto_input.txt

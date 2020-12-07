@@ -108,21 +108,26 @@ def all_in_a(base_paths, path_dicts, c_proportions):
     print(fig_path)
     plt.savefig(fig_path)
     plt.close()
-    return fig_path
+    return base_paths['root'], figname
 
 
 print("The start")
 offset_time_t = 12.0
-thetas = [0, 0.2, 0.4, 0.6, 0.8, 0.9, 0.95, 1.0, 1.05, 1.1, 1.2, 1.4, 1.6, 1.8, 2.0]
-base_paths_list = (runner.run_sim_batched("SEIR-Asyn", [input_string_from_args(14.781, 2.1011e-8, 1.8887e-7, 1/7, 1/14, 0.86834, 0.13266, 0.1259, 0.33029, 0.13978, 0.11624, 1.7826e-5, theta, 11081000, 105.1, 27.679, 53.839, 739, 1.1642, 1, 2, 0) for theta in thetas], 1, "theta_base"))
+thetas = [0, 0.2]
+base_paths_list = (runner.run_sim_batched("SEIR-Asyn", [input_string_from_args(14.781, 2.1011e-8, 1.8887e-7, 1/7, 1/14, 0.86834, 0.13266, 0.1259, 0.33029, 0.13978, 0.11624, 1.7826e-5, theta, 11081000, 105.1, 27.679, 53.839, 739, 1.1642, 1, 2, 0) for theta in thetas], 2, "theta_base"))
 print("base_paths_list made")
+
+os.makedirs(os.path.join(".","figures"), exist_ok = True)
+
 for base_paths, theta in zip(base_paths_list, thetas):
     print(f"starting {theta:01.02f} {base_paths['root']}")
     with open(base_paths['state']) as base_state_file:
         state = state_at_time(base_state_file, offset_time_t)
         scales = [1.0, 0.8, 0.5, 0.3, 0.1]
         alt_paths = (runner.run_sim_batched("SEIR-Asyn", [(input_string_from_state_and_args(state, scale*14.781, 2.1011e-8, 1.8887e-7, 1/7, 1/14, 0.86834, 0.13266, 0.1259, 0.33029, 0.13978, 0.11624, 1.7826e-5, theta)) for scale in scales], -1, f"theta_{theta:01.02f}"))
-        print("done", all_in_a(base_paths, alt_paths, scales))
+        root, figname = all_in_a(base_paths, alt_paths, scales)
+        os.replace(os.path.join(root, figname), os.path.join(".", "figures", figname))
+        print("Done", figname)
 
 
 
