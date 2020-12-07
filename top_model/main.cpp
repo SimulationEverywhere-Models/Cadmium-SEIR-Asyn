@@ -1,26 +1,9 @@
-
-#include "../atomics/population_group.hpp"
-
-//C++ headers
-#include <iostream>
-#include <iomanip>
-#include <chrono>
-#include <algorithm>
-#include <string>
-#include <sstream>
-#include <fstream>
-#include <regex>
-
-
-#define concept concept_old
 //Cadmium Simulator headers
 #include <cadmium/modeling/ports.hpp>
 #include <cadmium/modeling/dynamic_model.hpp>
 #include <cadmium/modeling/dynamic_model_translator.hpp>
 #include <cadmium/engine/pdevs_dynamic_runner.hpp>
 #include <cadmium/logger/common_loggers.hpp>
-
-#undef concept
 
 //Time class header
 #include <NDTime.hpp>
@@ -39,7 +22,15 @@
 #include "../atomics/recovered.hpp"
 #include "../atomics/deceased.hpp"
 
-
+//C++ headers
+#include <iostream>
+#include <iomanip>
+#include <chrono>
+#include <algorithm>
+#include <string>
+#include <sstream>
+#include <fstream>
+#include <regex>
 
 using namespace std;
 using namespace cadmium;
@@ -84,20 +75,6 @@ struct SEIRD_defs{
 
 
 int main(int argc, char ** argv) {
-    cout << std::is_trivial<model_params>::value << std::is_trivially_default_constructible<model_params>::value << std::is_trivially_copyable<model_params>::value << "\n";
-    cout << std::is_trivial<population>::value   << std::is_trivially_default_constructible<population>::value   << std::is_trivially_copyable<population>::value   << "\n";
-
-    model_params mc{4,0,0,0,0,0,0,0,0,0,0,0,0};
-
-    cout << mc.c << "\n";
-
-    model_params mc2 = mc;
-
-    cout << mc2.c << "\n";
-
-    model_params mc3 = {5};
-
-    cout << mc3.c << " " <<  mc3.e << "\n";
 
     double dt = 0.01;
 

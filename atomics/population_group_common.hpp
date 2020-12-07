@@ -24,23 +24,22 @@ using namespace std;
         struct quarantined_infective  : public in_port<double> { };
     };
 
-
-    constexpr double S_to_E (double c, double b, double q, double t, double S, double I, double A){return (c*(I+t*A)*S * b*(1-q));} // susceptible to exposed
-    constexpr double S_to_Eq(double c, double b, double q, double t, double S, double I, double A){return (c*(I+t*A)*S *   b*q)  ;} // susceptible to quarantined_exposed
-    constexpr double S_to_Sq(double c, double b, double q, double t, double S, double I, double A){return (c*(I+t*A)*S * (1-b)*q);} // susceptible to quarantined_susceptible
-    constexpr double E_to_I (double e, double n, double E)                                        {return (e*n    *E)            ;} // exposed to symptomatic_infective
-    constexpr double E_to_A (double e, double n, double E)                                        {return (e*(1-n)*E)            ;} // exposed to asymptomatic_infective
-    constexpr double I_to_H (double di, double I)                                                 {return (di*I)                 ;} // symptomatic_infective to quarantined_infective
-    constexpr double I_to_R (double yi, double I)                                                 {return (yi*I)                 ;} // symptomatic_infective to recovered
-    constexpr double I_to_D (double a, double I)                                                  {return (a *I)                 ;} // symptomatic_infective to deceased
-    constexpr double A_to_R (double ya, double A)                                                 {return (ya*A)                 ;} // asymptomatic_infective to recovered
-    constexpr double Sq_to_S(double l, double Sq)                                                 {return (l *Sq)                ;} // quarantined_susceptible to susceptible
-    constexpr double Eq_to_H(double dq, double Eq)                                                {return (dq*Eq)                ;} // quarantined_exposed to quarantined_infective
-    constexpr double H_to_R (double yh, double H)                                                 {return (yh*H)                 ;} // quarantined_infective to recovered
-    constexpr double H_to_D (double a, double H)                                                  {return (a*H)                  ;} // quarantined_infective to deceased
-
-
     /*
+    inline double S_to_E (double c, double b, double q, double t, double S, double I, double A){return (c*(I+t*A)*S * b*(1-q));} // susceptible to exposed
+    inline double S_to_Eq(double c, double b, double q, double t, double S, double I, double A){return (c*(I+t*A)*S *   b*q)  ;} // susceptible to quarantined_exposed
+    inline double S_to_Sq(double c, double b, double q, double t, double S, double I, double A){return (c*(I+t*A)*S * (1-b)*q);} // susceptible to quarantined_susceptible
+    inline double E_to_I (double e, double n, double E)                                        {return (e*n    *E)          ;} // exposed to symptomatic_infective
+    inline double E_to_A (double e, double n, double E)                                        {return (e*(1-n)*E)          ;} // exposed to asymptomatic_infective
+    inline double I_to_H (double di, double I)                                                 {return (di*I)               ;} // symptomatic_infective to quarantined_infective
+    inline double I_to_R (double yi, double I)                                                 {return (yi*I)               ;} // symptomatic_infective to recovered
+    inline double I_to_D (double a, double I)                                                  {return (a *I)               ;} // symptomatic_infective to deceased
+    inline double A_to_R (double ya, double A)                                                 {return (ya*A)               ;} // asymptomatic_infective to recovered
+    inline double Sq_to_S(double l, double Sq)                                                 {return (l *Sq)              ;} // quarantined_susceptible to susceptible
+    inline double Eq_to_H(double dq, double Eq)                                                {return (dq*Eq)              ;} // quarantined_exposed to quarantined_infective
+    inline double H_to_R (double yh, double H)                                                 {return (yh*H)               ;} // quarantined_infective to recovered
+    inline double H_to_D (double a, double H)                                                  {return (a*H)                ;} // quarantined_infective to deceased
+    */
+
     inline double S_to_E (double c, double b, double q, double t, double S, double I, double A){
         double delta = (c*(I+t*A)*S * b*(1-q));
         if(delta < 0){
@@ -158,5 +157,5 @@ using namespace std;
         return delta;
 
     } // quarantined_infective to deceased
-    */
+
 #endif //_POPULATION_GROUP_COMMON_HPP__
