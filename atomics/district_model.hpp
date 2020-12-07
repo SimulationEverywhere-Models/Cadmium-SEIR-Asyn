@@ -37,7 +37,6 @@ struct district_ports{
 template<typename TIME>
 class district_model{
     public:
-    const TIME dt{0.01};
     // ports definition
     using input_ports=std::tuple<
         typename district_ports::new_travel_rate,
@@ -66,7 +65,7 @@ class district_model{
 	}
 
     // internal transition
-    void internal_transition() const {
+    void internal_transition() {
         /*intentionally left blank*/
     }
 
@@ -97,7 +96,7 @@ class district_model{
 
     // time_advance function
     TIME time_advance() const {
-		return {dt};
+		return {1};
     }
 
     // output function
@@ -107,7 +106,7 @@ class district_model{
         get_messages<typename district_ports::report>(bags).push_back(state.d.val);
 
         /* Calculate how much you should tell yourself to change */
-        auto d = delta(state.d.val, state.d.params, dt);
+        auto d = delta(state.d.val, state.d.params, 1.0);
 
         /*
             For each connection, calculate how many people of what classes are going there from here
@@ -130,8 +129,11 @@ class district_model{
         external_transition(e, move(mbs));
     }
 
+
+
     friend ostringstream& operator<<(ostringstream& os, const typename district_model<TIME>::state_type& i) {
         os << i.d;
+
 		return os;
     }
 
