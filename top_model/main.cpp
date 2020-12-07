@@ -1,48 +1,44 @@
 
-//Time class header
-#include <NDTime.hpp>
-
-//C++ libraries
-#include <iostream>
-#include <string>
-
-//Atomic model headers
-#define concept concept_old
-
-//Cadmium Simulator headers
-#include <cadmium/modeling/ports.hpp>
-#include <cadmium/modeling/dynamic_model.hpp>
-#include <cadmium/modeling/dynamic_coupled.hpp>
-#include <cadmium/modeling/dynamic_model_translator.hpp>
-#include <cadmium/engine/pdevs_dynamic_runner.hpp>
-#include <cadmium/logger/common_loggers.hpp>
-
-//Atomic model for inputs
-#include <cadmium/basic_model/pdevs/iestream.hpp>
-
-#undef concept
-
 #include "../atomics/population.hpp"
 #include "../atomics/district.hpp"
 #include "../atomics/district_model.hpp"
 
 
+//C++ headers
+#include <iostream>
+#include <iomanip>
+#include <chrono>
+#include <algorithm>
+#include <string>
+#include <sstream>
+#include <fstream>
+#include <regex>
+
+
+#define concept concept_old
+//Cadmium Simulator headers
+#include <cadmium/modeling/ports.hpp>
+#include <cadmium/modeling/dynamic_model.hpp>
+#include <cadmium/modeling/dynamic_model_translator.hpp>
+#include <cadmium/engine/pdevs_dynamic_runner.hpp>
+#include <cadmium/logger/common_loggers.hpp>
+
+#undef concept
+
+//Time class header
+#include <NDTime.hpp>
+
 using namespace std;
 using namespace cadmium;
 using namespace pop;
-//using namespace cadmium::basic_models::pdevs;
+
 
 using TIME = double;
-
-/***** Define input port for coupled models *****/
-// none for this test
-
 
 /***** Define output ports for coupled model *****/
 struct SEIRD_defs{
     struct report : public out_port<population> { };
 };
-
 
 /*************** Loggers *******************/
     static ofstream out_messages("output_messages.txt");
@@ -67,32 +63,22 @@ struct SEIRD_defs{
 /******************************************************/
 
 
+int main(int argc, char ** argv) {
 
-int main(){
-
-	/****** Station Passenger Generator instantiations *******************/
-        /* see ../atomics/population.hpp and for a description of what is what. This can also be constructed piecemeal */
-
-    district sample_d{"sample",
+    /* see ../atomics/population.hpp for a description og what is what. This can also be constructed piecemeal */
+    pop::district sample{"sample",
         {14.781, 14.781, 0, 0, 2.1011e-8, 0, 2.1011e-8, 0, 1.8887e-7, 1.8887e-7, 1.8887e-7, 1.8887e-7, 0.86834, 0.071428, 0.142857, 0.1259, 0.13266, 0, 0.33029, 0.13978, 0.11624, 0.11624, 1.7826e-5, 0, 1.7826e-5, 1.7826e-5},
         {11081000, 739, 105.1, 1.1642, 27.679, 1, 53.839, 0, 2, 0},
         {}};
 
-    /*
-    district sample_d{"sample",
-        {10, 0, 0, 0, 1e-8, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {1000000, 0, 0, 0, 1, 0, 0, 0, 0, 0},
-        {}};
-    */
-
-	shared_ptr<dynamic::modeling::model> sample = dynamic::translate::make_dynamic_atomic_model<district_model, TIME, district>("sample", std::move(sample_d));
+    shared_ptr<dynamic::modeling::model> pop_sample = dynamic::translate::make_dynamic_atomic_model<district_model, TIME, pop::district>("sample", sample);
 
     dynamic::modeling::Ports iports_SEIRD = {};
     dynamic::modeling::Ports oports_SEIRD  = {
             typeid(SEIRD_defs::report)};
 
     dynamic::modeling::Models submodels_SEIRD  = {
-            sample};
+            pop_sample};
 
     dynamic::modeling::EICs eics_SEIRD  = {};
     dynamic::modeling::EOCs eocs_SEIRD  = {
@@ -106,7 +92,25 @@ int main(){
             "SEIRD ", submodels_SEIRD , iports_SEIRD , oports_SEIRD , eics_SEIRD , eocs_SEIRD , ics_SEIRD
         );
 
-    dynamic::engine::runner<TIME, logger_top> r(SEIRD, {0});
-    r.run_until(120);
+    dynamic::engine::runner<double, logger_top> r(SEIRD, {0});
+    r.run_until(365);
     return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -2,7 +2,7 @@
 #ifndef _DISTRICT__HPP
 #define _DISTRICT__HPP
 
-#include "./population.hpp"
+#include "../atomics/population.hpp"
 
 #include <iostream>
 #include <iomanip>

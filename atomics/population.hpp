@@ -23,7 +23,6 @@ const everything that can be const
 perfer non-friend non-member functions
 
 */
-//#define constexpr inline
 
 namespace pop {
 
@@ -339,24 +338,24 @@ namespace pop {
     */
 
     constexpr double susceptible_to_exposed      (const population& pop, const model_params& params){
-        return pop.susceptible * pop.infective      * params.contact_rate_i  * params.infectivity_from_contact_i  * (1-params.quarantined_chance_from_contact_i)  +
-               pop.susceptible * pop.asymptomatic   * params.contact_rate_a  * params.infectivity_from_contact_a  * (1-params.quarantined_chance_from_contact_a)  +
-               pop.susceptible * pop.infective_q    * params.contact_rate_iq * params.infectivity_from_contact_iq * (1-params.quarantined_chance_from_contact_iq) +
-               pop.susceptible * pop.asymptomatic_q * params.contact_rate_aq * params.infectivity_from_contact_aq * (1-params.quarantined_chance_from_contact_aq);
+        return pop.susceptible * pop.infective      * params.contact_rate_i  * (1-params.quarantined_chance_from_contact_i)  +
+               pop.susceptible * pop.asymptomatic   * params.contact_rate_a  * (1-params.quarantined_chance_from_contact_a)  +
+               pop.susceptible * pop.infective_q    * params.contact_rate_iq * (1-params.quarantined_chance_from_contact_iq) +
+               pop.susceptible * pop.asymptomatic_q * params.contact_rate_aq * (1-params.quarantined_chance_from_contact_aq);
     }
 
     constexpr double susceptible_to_exposed_q    (const population& pop, const model_params& params){
-        return pop.susceptible * pop.infective      * params.contact_rate_i  * params.infectivity_from_contact_i  * params.quarantined_chance_from_contact_i  +
-               pop.susceptible * pop.asymptomatic   * params.contact_rate_a  * params.infectivity_from_contact_a  * params.quarantined_chance_from_contact_a  +
-               pop.susceptible * pop.infective_q    * params.contact_rate_iq * params.infectivity_from_contact_iq * params.quarantined_chance_from_contact_iq +
-               pop.susceptible * pop.asymptomatic_q * params.contact_rate_aq * params.infectivity_from_contact_aq * params.quarantined_chance_from_contact_aq;
+        return pop.susceptible * pop.infective      * params.contact_rate_i  * params.quarantined_chance_from_contact_i  +
+               pop.susceptible * pop.asymptomatic   * params.contact_rate_a  * params.quarantined_chance_from_contact_a  +
+               pop.susceptible * pop.infective_q    * params.contact_rate_iq * params.quarantined_chance_from_contact_iq +
+               pop.susceptible * pop.asymptomatic_q * params.contact_rate_aq * params.quarantined_chance_from_contact_aq;
     }
 
     constexpr double susceptible_to_susceptible_q(const population& pop, const model_params& params){
-        return pop.susceptible * pop.infective      * params.contact_rate_i  * (1-params.infectivity_from_contact_i)  * params.quarantined_chance_from_contact_i  +
-               pop.susceptible * pop.asymptomatic   * params.contact_rate_a  * (1-params.infectivity_from_contact_a)  * params.quarantined_chance_from_contact_a  +
-               pop.susceptible * pop.infective_q    * params.contact_rate_iq * (1-params.infectivity_from_contact_iq) * params.quarantined_chance_from_contact_iq +
-               pop.susceptible * pop.asymptomatic_q * params.contact_rate_aq * (1-params.infectivity_from_contact_aq) * params.quarantined_chance_from_contact_aq;
+        return pop.susceptible * pop.infective      * (1-params.contact_rate_i)  * params.quarantined_chance_from_contact_i  +
+               pop.susceptible * pop.asymptomatic   * (1-params.contact_rate_a)  * params.quarantined_chance_from_contact_a  +
+               pop.susceptible * pop.infective_q    * (1-params.contact_rate_iq) * params.quarantined_chance_from_contact_iq +
+               pop.susceptible * pop.asymptomatic_q * (1-params.contact_rate_aq) * params.quarantined_chance_from_contact_aq;
     }
 
     constexpr double susceptible_q_to_susceptible(const population& pop, const model_params& params){return pop.susceptible_q*params.advacement_sq;}
@@ -438,7 +437,4 @@ namespace pop {
     }
 
 };
-
-
-//#undef constexpr
 #endif /* _POPULATION__HPP */
